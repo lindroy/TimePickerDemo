@@ -23,7 +23,6 @@ import java.util.Locale;
 
 /**
  * Created by liuwan on 2016/9/28.
- *
  */
 public class CustomDatePicker {
 
@@ -62,7 +61,7 @@ public class CustomDatePicker {
     private ArrayList<String> year, month, day, hour, minute;
     private int startYear, startMonth, startDay, startHour, startMinute, endYear, endMonth, endDay, endHour, endMinute;
     private int lastMonDays; //上一个被选中的月份天数
-    private String currentDay;
+    private String currentMon, currentDay; //当前选中的月、日
     private boolean spanYear, spanMon, spanDay, spanHour, spanMin;
     private Calendar selectedCalender, startCalendar, endCalendar;
     private TextView tv_cancle, tv_select, hour_text, minute_text;
@@ -310,6 +309,7 @@ public class CustomDatePicker {
             public void onSelect(String text) {
                 selectedCalender.set(Calendar.DAY_OF_MONTH, 1);
                 selectedCalender.set(Calendar.MONTH, Integer.parseInt(text) - 1);
+                currentMon = text;
                 dayChange();
             }
         });
@@ -319,7 +319,7 @@ public class CustomDatePicker {
             public void onSelect(String text) {
                 selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(text));
                 currentDay = text;
-                Log.e("Tag","text="+text);
+                Log.e("Tag", "text=" + text);
                 hourChange();
             }
         });
@@ -358,7 +358,12 @@ public class CustomDatePicker {
         }
         selectedCalender.set(Calendar.MONTH, Integer.parseInt(month.get(0)) - 1);
         month_pv.setData(month);
-        month_pv.setSelected(0);
+//        month_pv.setSelected(0);
+        if (month.size() < MAX_MONTH && Integer.valueOf(currentMon) > month.size()) {
+            month_pv.setSelected(month.size() - 1);
+        } else {
+            month_pv.setSelected(currentMon);
+        }
         executeAnimator(month_pv);
 
         month_pv.postDelayed(new Runnable() {
@@ -388,14 +393,18 @@ public class CustomDatePicker {
         }
         selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.get(0)));
         day_pv.setData(day);
-        if (day.size() < lastMonDays && Integer.valueOf(currentDay) > day.size()){
-            day_pv.setSelected(day.size()-1);
-            currentDay = String.valueOf(day.size());
-        }else {
+        if (day.size() < lastMonDays && Integer.valueOf(currentDay) > day.size()) {
+            day_pv.setSelected(day.size() - 1);
+//            currentDay = String.valueOf(day.size());
+            currentDay = formatTimeUnit(day.size());
+            Log.e("Tag", "currentDay1=" + currentDay);
+
+        } else {
             day_pv.setSelected(currentDay);
+            Log.e("Tag", "currentDay2=" + currentDay);
         }
         lastMonDays = day.size();
-        Log.e("Tag",selectedMonth+"月天数"+day.size());
+        Log.e("Tag", selectedMonth + "月天数" + day.size());
 //        day_pv.setSelected(0);
         executeAnimator(day_pv);
 
@@ -573,6 +582,7 @@ public class CustomDatePicker {
             }
             month_pv.setData(month);
             month_pv.setSelected(dateStr[1]);
+            currentMon = dateStr[1];
             selectedCalender.set(Calendar.MONTH, Integer.parseInt(dateStr[1]) - 1);
             executeAnimator(month_pv);
 
@@ -592,10 +602,10 @@ public class CustomDatePicker {
                 }
             }
             lastMonDays = day.size();
-            Log.e("Tag","lastMonDays="+lastMonDays);
+            Log.e("Tag", "lastMonDays=" + lastMonDays);
             day_pv.setData(day);
             day_pv.setSelected(dateStr[2]);
-            Log.e("Tag","dateStr[2]="+dateStr[2]);
+            Log.e("Tag", "dateStr[2]=" + dateStr[2]);
             currentDay = dateStr[2];
             selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dateStr[2]));
             executeAnimator(day_pv);
