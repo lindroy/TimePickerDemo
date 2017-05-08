@@ -60,8 +60,8 @@ public class CustomDatePicker {
 
     private ArrayList<String> year, month, day, hour, minute;
     private int startYear, startMonth, startDay, startHour, startMinute, endYear, endMonth, endDay, endHour, endMinute;
-    private int lastMonDays; //上一个被选中的月份天数
-    private String currentMon, currentDay; //当前选中的月、日
+    private int lastMonthDays; //上一个被选中的月份天数
+    private String currentMon, currentDay, currentHour, currentMin; //当前选中的月、日、时、分
     private boolean spanYear, spanMon, spanDay, spanHour, spanMin;
     private Calendar selectedCalender, startCalendar, endCalendar;
     private TextView tv_cancle, tv_select, hour_text, minute_text;
@@ -126,7 +126,6 @@ public class CustomDatePicker {
             public void onClick(View view) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
                 handler.handle(sdf.format(selectedCalender.getTime()));
-                Log.e("Tag","显示的日期="+sdf.format(selectedCalender.getTime()));
                 datePickerDialog.dismiss();
             }
         });
@@ -328,6 +327,7 @@ public class CustomDatePicker {
             @Override
             public void onSelect(String text) {
                 selectedCalender.set(Calendar.HOUR_OF_DAY, Integer.parseInt(text));
+                currentHour = text;
                 minuteChange();
             }
         });
@@ -336,6 +336,7 @@ public class CustomDatePicker {
             @Override
             public void onSelect(String text) {
                 selectedCalender.set(Calendar.MINUTE, Integer.parseInt(text));
+                currentMin = text;
             }
         });
     }
@@ -356,17 +357,16 @@ public class CustomDatePicker {
                 month.add(formatTimeUnit(i));
             }
         }
-        selectedCalender.set(Calendar.MONTH, Integer.parseInt(month.get(0)) - 1);
+//        selectedCalender.set(Calendar.MONTH, Integer.parseInt(month.get(0)) - 1);
         month_pv.setData(month);
-//        month_pv.setSelected(0);
         if (month.size() < MAX_MONTH && Integer.valueOf(currentMon) > month.size()) {
             month_pv.setSelected(month.size() - 1);
             selectedCalender.set(Calendar.DAY_OF_MONTH, 1);
-            selectedCalender.set(Calendar.MONTH, month.size()-1);
+            selectedCalender.set(Calendar.MONTH, month.size() - 1);
         } else {
             month_pv.setSelected(currentMon);
             selectedCalender.set(Calendar.DAY_OF_MONTH, 1);
-            selectedCalender.set(Calendar.MONTH, Integer.valueOf(currentMon)-1);
+            selectedCalender.set(Calendar.MONTH, Integer.valueOf(currentMon) - 1);
         }
         executeAnimator(month_pv);
 
@@ -395,21 +395,17 @@ public class CustomDatePicker {
                 day.add(formatTimeUnit(i));
             }
         }
-        selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.get(0)));
+//        selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.get(0)));
         day_pv.setData(day);
-        if (day.size() < lastMonDays && Integer.valueOf(currentDay) > day.size()) {
+        if (day.size() < lastMonthDays && Integer.valueOf(currentDay) > day.size()) {
             day_pv.setSelected(day.size() - 1);
-//            currentDay = String.valueOf(day.size());
             currentDay = formatTimeUnit(day.size());
-            Log.e("Tag", "currentDay1=" + currentDay);
 
         } else {
             day_pv.setSelected(currentDay);
-            Log.e("Tag", "currentDay2=" + currentDay);
         }
         selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(currentDay));
-        lastMonDays = day.size();
-        Log.e("Tag", selectedMonth + "月天数" + day.size());
+        lastMonthDays = day.size();
 //        day_pv.setSelected(0);
         executeAnimator(day_pv);
 
@@ -440,9 +436,17 @@ public class CustomDatePicker {
                     hour.add(formatTimeUnit(i));
                 }
             }
-            selectedCalender.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour.get(0)));
+//            selectedCalender.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour.get(0)));
             hour_pv.setData(hour);
-            hour_pv.setSelected(0);
+            if (hour.size() < 24 && Integer.valueOf(currentHour) > hour.size()) {
+                hour_pv.setSelected(hour.size() - 1);
+                currentHour = formatTimeUnit(hour.size());
+                selectedCalender.set(Calendar.HOUR_OF_DAY, hour.size());
+            } else {
+                hour_pv.setSelected(currentHour);
+                selectedCalender.set(Calendar.HOUR_OF_DAY, Integer.valueOf(currentHour));
+            }
+//            hour_pv.setSelected(0);
             executeAnimator(hour_pv);
         }
 
@@ -474,9 +478,17 @@ public class CustomDatePicker {
                     minute.add(formatTimeUnit(i));
                 }
             }
-            selectedCalender.set(Calendar.MINUTE, Integer.parseInt(minute.get(0)));
+//            selectedCalender.set(Calendar.MINUTE, Integer.parseInt(minute.get(0)));
             minute_pv.setData(minute);
-            minute_pv.setSelected(0);
+//            minute_pv.setSelected(0);
+            if (minute.size() < 60 && minute.size() < Integer.valueOf(currentMin)) {
+                minute_pv.setSelected(minute.size() - 1);
+                currentMin = formatTimeUnit(minute.size());
+                selectedCalender.set(Calendar.MINUTE, minute.size());
+            } else {
+                minute_pv.setSelected(currentMin);
+                selectedCalender.set(Calendar.MINUTE, Integer.parseInt(currentMin));
+            }
             executeAnimator(minute_pv);
         }
         executeScroll();
@@ -559,6 +571,36 @@ public class CustomDatePicker {
         }
     }
 
+    public void setYearIsLoop(boolean isLoop) {
+        if (canAccess) {
+            this.year_pv.setIsLoop(isLoop);
+        }
+    }
+
+    public void setMonIsLoop(boolean isLoop) {
+        if (canAccess) {
+            this.month_pv.setIsLoop(isLoop);
+        }
+    }
+
+    public void setDayIsLoop(boolean isLoop) {
+        if (canAccess) {
+            this.day_pv.setIsLoop(isLoop);
+        }
+    }
+
+    public void setHourIsLoop(boolean isLoop) {
+        if (canAccess) {
+            this.hour_pv.setIsLoop(isLoop);
+        }
+    }
+
+    public void setMinIsLoop(boolean isLoop) {
+        if (canAccess) {
+            this.minute_pv.setIsLoop(isLoop);
+        }
+    }
+
     /**
      * 设置日期控件默认选中的时间
      */
@@ -606,11 +648,9 @@ public class CustomDatePicker {
                     day.add(formatTimeUnit(i));
                 }
             }
-            lastMonDays = day.size();
-            Log.e("Tag", "lastMonDays=" + lastMonDays);
+            lastMonthDays = day.size();
             day_pv.setData(day);
             day_pv.setSelected(dateStr[2]);
-            Log.e("Tag", "dateStr[2]=" + dateStr[2]);
             currentDay = dateStr[2];
             selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dateStr[2]));
             executeAnimator(day_pv);
@@ -636,6 +676,7 @@ public class CustomDatePicker {
                     }
                     hour_pv.setData(hour);
                     hour_pv.setSelected(timeStr[0]);
+                    currentHour = timeStr[0];
                     selectedCalender.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeStr[0]));
                     executeAnimator(hour_pv);
                 }
@@ -659,6 +700,7 @@ public class CustomDatePicker {
                     }
                     minute_pv.setData(minute);
                     minute_pv.setSelected(timeStr[1]);
+                    currentMin = timeStr[1];
                     selectedCalender.set(Calendar.MINUTE, Integer.parseInt(timeStr[1]));
                     executeAnimator(minute_pv);
                 }

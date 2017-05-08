@@ -50,8 +50,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 currentDate.setText(time.split(" ")[0]);
             }
         },"2007-01-01 00:00", now);
-        datePicker.showSpecificTime(false);
+        datePicker.showSpecificTime(false); //显示时和分
         datePicker.setIsLoop(false);
+        datePicker.setDayIsLoop(true);
+        datePicker.setMonIsLoop(true);
 
         timePicker = new CustomDatePicker(this, new CustomDatePicker.ResultHandler() {
             @Override
@@ -60,7 +62,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
             }
         },"2007-01-01 00:00", now);
         timePicker.showSpecificTime(true);
-        timePicker.setIsLoop(true);
+        timePicker.setIsLoop(false);
     }
 
     @Override
@@ -73,7 +75,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
             case R.id.selectTime:
                 // 日期格式为yyyy-MM-dd HH:mm
-                timePicker.show(time);
+                timePicker.show(now);
                 break;
         }
     }
