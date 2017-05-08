@@ -17,7 +17,7 @@ import java.util.Locale;
 public class MainActivity extends Activity implements View.OnClickListener{
     private RelativeLayout selectDate, selectTime;
     private TextView currentDate, currentTime;
-    private CustomDatePicker datePicker;
+    private CustomDatePicker datePicker,timePicker;
     private String now;
     private String time;
 
@@ -41,6 +41,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
         //设置当前显示的时间
 //        currentDate.setText(now.split(" ")[0]);
 
+        /**
+         * 设置年月日
+         */
         datePicker = new CustomDatePicker(this, new CustomDatePicker.ResultHandler() {
             @Override
             public void handle(String time) {
@@ -49,6 +52,15 @@ public class MainActivity extends Activity implements View.OnClickListener{
         },"2007-01-01 00:00", now);
         datePicker.showSpecificTime(false);
         datePicker.setIsLoop(false);
+
+        timePicker = new CustomDatePicker(this, new CustomDatePicker.ResultHandler() {
+            @Override
+            public void handle(String time) {
+                currentTime.setText(time);
+            }
+        },"2007-01-01 00:00", now);
+        timePicker.showSpecificTime(true);
+        timePicker.setIsLoop(true);
     }
 
     @Override
@@ -61,7 +73,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
             case R.id.selectTime:
                 // 日期格式为yyyy-MM-dd HH:mm
-//                customDatePicker2.show(currentTime.getText().toString());
+                timePicker.show(time);
                 break;
         }
     }

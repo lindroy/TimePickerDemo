@@ -126,6 +126,7 @@ public class CustomDatePicker {
             public void onClick(View view) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
                 handler.handle(sdf.format(selectedCalender.getTime()));
+                Log.e("Tag","显示的日期="+sdf.format(selectedCalender.getTime()));
                 datePickerDialog.dismiss();
             }
         });
@@ -319,7 +320,6 @@ public class CustomDatePicker {
             public void onSelect(String text) {
                 selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(text));
                 currentDay = text;
-                Log.e("Tag", "text=" + text);
                 hourChange();
             }
         });
@@ -361,8 +361,12 @@ public class CustomDatePicker {
 //        month_pv.setSelected(0);
         if (month.size() < MAX_MONTH && Integer.valueOf(currentMon) > month.size()) {
             month_pv.setSelected(month.size() - 1);
+            selectedCalender.set(Calendar.DAY_OF_MONTH, 1);
+            selectedCalender.set(Calendar.MONTH, month.size()-1);
         } else {
             month_pv.setSelected(currentMon);
+            selectedCalender.set(Calendar.DAY_OF_MONTH, 1);
+            selectedCalender.set(Calendar.MONTH, Integer.valueOf(currentMon)-1);
         }
         executeAnimator(month_pv);
 
@@ -403,6 +407,7 @@ public class CustomDatePicker {
             day_pv.setSelected(currentDay);
             Log.e("Tag", "currentDay2=" + currentDay);
         }
+        selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(currentDay));
         lastMonDays = day.size();
         Log.e("Tag", selectedMonth + "月天数" + day.size());
 //        day_pv.setSelected(0);
