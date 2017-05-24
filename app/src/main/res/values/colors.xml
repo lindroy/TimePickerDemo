@@ -4,11 +4,11 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="color1">#F0F0F0</color>
-    <color name="color2">#FFFFFF</color>
-    <color name="color3">#B0B0B0</color>
-    <color name="color4">#666666</color>
-    <color name="color5">#57C5E8</color>
+    <color name="color_unit">#F0F0F0</color>
+    <color name="color_item_bg">#FFFFFF</color>
+    <color name="color_text_unselected">#B0B0B0</color>
+    <color name="color_desc">#666666</color>
+    <color name="color_result">#57C5E8</color>
     <color name="color_bg">#b0000000</color>
     <color name="color_gold">#ffda53</color>
 </resources>

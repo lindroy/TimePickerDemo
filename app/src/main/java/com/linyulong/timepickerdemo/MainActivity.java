@@ -1,14 +1,10 @@
 package com.linyulong.timepickerdemo;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.linyulong.timepickerdemo.widget.CustomDatePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,8 +14,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private RelativeLayout selectDate, selectTime;
     private TextView currentDate, currentTime;
     private CustomDatePicker datePicker,timePicker;
-    private String now;
     private String time;
+    private String date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,33 +32,35 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     private void initPicker() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
-        now = sdf.format(new Date());
-        time = sdf.format(new Date()).split(" ")[0];
+        time = sdf.format(new Date());
+        date = time.split(" ")[0];
+        //设置当前显示的日期
+        currentDate.setText(date);
         //设置当前显示的时间
-//        currentDate.setText(now.split(" ")[0]);
+        currentTime.setText(time);
 
         /**
          * 设置年月日
          */
-        datePicker = new CustomDatePicker(this, new CustomDatePicker.ResultHandler() {
+        datePicker = new CustomDatePicker(this, "请选择日期", new CustomDatePicker.ResultHandler() {
             @Override
             public void handle(String time) {
                 currentDate.setText(time.split(" ")[0]);
             }
-        },"2007-01-01 00:00", now);
+        }, "2007-01-01 00:00", time);
         datePicker.showSpecificTime(false); //显示时和分
         datePicker.setIsLoop(false);
         datePicker.setDayIsLoop(true);
         datePicker.setMonIsLoop(true);
 
-        timePicker = new CustomDatePicker(this, new CustomDatePicker.ResultHandler() {
+        timePicker = new CustomDatePicker(this, "请选择时间", new CustomDatePicker.ResultHandler() {
             @Override
             public void handle(String time) {
                 currentTime.setText(time);
             }
-        },"2007-01-01 00:00", now);
+        }, "2007-01-01 00:00", "2027-12-31 23:59");//"2027-12-31 23:59"
         timePicker.showSpecificTime(true);
-        timePicker.setIsLoop(false);
+        timePicker.setIsLoop(true);
     }
 
     @Override
@@ -70,12 +68,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
         switch (v.getId()) {
             case R.id.selectDate:
                 // 日期格式为yyyy-MM-dd
-                datePicker.show(time);
+                datePicker.show(date);
                 break;
 
             case R.id.selectTime:
                 // 日期格式为yyyy-MM-dd HH:mm
-                timePicker.show(now);
+                timePicker.show(time);
                 break;
         }
     }

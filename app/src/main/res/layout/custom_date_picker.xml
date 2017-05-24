@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
     android:orientation="vertical">
 
     <RelativeLayout
@@ -51,7 +52,7 @@
          />
 
     <RelativeLayout
-
+        android:background="@color/color_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -66,7 +67,7 @@
             android:paddingRight="20dp"
             android:paddingTop="15dp">
 
-            <com.linyulong.timepickerdemo.widget.DatePickerView
+            <com.linyulong.timepickerdemo.DatePickerView
                 android:id="@+id/year_pv"
                 android:layout_width="0dp"
                 android:layout_height="160dp"
@@ -78,10 +79,10 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/year"
-                android:textColor="@color/color1"
+                android:textColor="@color/color_unit"
                 android:textSize="18sp" />
 
-            <com.linyulong.timepickerdemo.widget.DatePickerView
+            <com.linyulong.timepickerdemo.DatePickerView
                 android:id="@+id/month_pv"
                 android:layout_width="0dp"
                 android:layout_height="160dp"
@@ -93,10 +94,10 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/month"
-                android:textColor="@color/color1"
+                android:textColor="@color/color_unit"
                 android:textSize="18sp" />
 
-            <com.linyulong.timepickerdemo.widget.DatePickerView
+            <com.linyulong.timepickerdemo.DatePickerView
                 android:id="@+id/day_pv"
                 android:layout_width="0dp"
                 android:layout_height="160dp"
@@ -108,10 +109,10 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/day"
-                android:textColor="@color/color1"
+                android:textColor="@color/color_unit"
                 android:textSize="18sp" />
 
-            <com.linyulong.timepickerdemo.widget.DatePickerView
+            <com.linyulong.timepickerdemo.DatePickerView
                 android:id="@+id/hour_pv"
                 android:layout_width="0dp"
                 android:layout_height="160dp"
@@ -124,10 +125,10 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/hour"
-                android:textColor="@color/color1"
+                android:textColor="@color/color_unit"
                 android:textSize="18sp" />
 
-            <com.linyulong.timepickerdemo.widget.DatePickerView
+            <com.linyulong.timepickerdemo.DatePickerView
                 android:id="@+id/minute_pv"
                 android:layout_width="0dp"
                 android:layout_height="160dp"
@@ -140,7 +141,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/minute"
-                android:textColor="@color/color1"
+                android:textColor="@color/color_unit"
                 android:textSize="18sp" />
 
         </LinearLayout>

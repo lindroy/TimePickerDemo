@@ -1,19 +1,15 @@
-package com.linyulong.timepickerdemo.widget;
+package com.linyulong.timepickerdemo;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.Dialog;
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
-
-
-import com.linyulong.timepickerdemo.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -61,16 +57,18 @@ public class CustomDatePicker {
     private ArrayList<String> year, month, day, hour, minute;
     private int startYear, startMonth, startDay, startHour, startMinute, endYear, endMonth, endDay, endHour, endMinute;
     private int lastMonthDays; //上一个被选中的月份天数
+    private String title;
     private String currentMon, currentDay, currentHour, currentMin; //当前选中的月、日、时、分
     private boolean spanYear, spanMon, spanDay, spanHour, spanMin;
     private Calendar selectedCalender, startCalendar, endCalendar;
-    private TextView tv_cancle, tv_select, hour_text, minute_text;
+    private TextView tv_title, tv_cancle, tv_select, hour_text, minute_text;
 
-    public CustomDatePicker(Context context, ResultHandler resultHandler, String startDate, String endDate) {
+    public CustomDatePicker(Context context, String title, ResultHandler resultHandler, String startDate, String endDate) {
         if (isValidDate(startDate, "yyyy-MM-dd HH:mm") && isValidDate(endDate, "yyyy-MM-dd HH:mm")) {
             canAccess = true;
             this.context = context;
             this.handler = resultHandler;
+            this.title = title;
             selectedCalender = Calendar.getInstance();
             startCalendar = Calendar.getInstance();
             endCalendar = Calendar.getInstance();
@@ -109,11 +107,13 @@ public class CustomDatePicker {
         day_pv = (DatePickerView) datePickerDialog.findViewById(R.id.day_pv);
         hour_pv = (DatePickerView) datePickerDialog.findViewById(R.id.hour_pv);
         minute_pv = (DatePickerView) datePickerDialog.findViewById(R.id.minute_pv);
+        tv_title = (TextView) datePickerDialog.findViewById(R.id.tv_title);
         tv_cancle = (TextView) datePickerDialog.findViewById(R.id.tv_cancle);
         tv_select = (TextView) datePickerDialog.findViewById(R.id.tv_select);
         hour_text = (TextView) datePickerDialog.findViewById(R.id.hour_text);
         minute_text = (TextView) datePickerDialog.findViewById(R.id.minute_text);
 
+        tv_title.setText(title);
         tv_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -309,7 +309,7 @@ public class CustomDatePicker {
             public void onSelect(String text) {
                 selectedCalender.set(Calendar.DAY_OF_MONTH, 1);
                 selectedCalender.set(Calendar.MONTH, Integer.parseInt(text) - 1);
-                currentMon = text;
+                currentMon = text; //保存选择的月份
                 dayChange();
             }
         });
@@ -318,7 +318,7 @@ public class CustomDatePicker {
             @Override
             public void onSelect(String text) {
                 selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(text));
-                currentDay = text;
+                currentDay = text;//保存选择的日期
                 hourChange();
             }
         });
@@ -327,7 +327,7 @@ public class CustomDatePicker {
             @Override
             public void onSelect(String text) {
                 selectedCalender.set(Calendar.HOUR_OF_DAY, Integer.parseInt(text));
-                currentHour = text;
+                currentHour = text; //保存选择的小时
                 minuteChange();
             }
         });
@@ -336,7 +336,7 @@ public class CustomDatePicker {
             @Override
             public void onSelect(String text) {
                 selectedCalender.set(Calendar.MINUTE, Integer.parseInt(text));
-                currentMin = text;
+                currentMin = text; //保存选择的分钟
             }
         });
     }
@@ -395,18 +395,18 @@ public class CustomDatePicker {
                 day.add(formatTimeUnit(i));
             }
         }
-//        selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.get(0)));
         day_pv.setData(day);
+//        selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.get(0)));
+//        day_pv.setSelected(0);
         if (day.size() < lastMonthDays && Integer.valueOf(currentDay) > day.size()) {
             day_pv.setSelected(day.size() - 1);
             currentDay = formatTimeUnit(day.size());
-
         } else {
             day_pv.setSelected(currentDay);
         }
         selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(currentDay));
+        //重新赋值
         lastMonthDays = day.size();
-//        day_pv.setSelected(0);
         executeAnimator(day_pv);
 
         day_pv.postDelayed(new Runnable() {
@@ -437,16 +437,16 @@ public class CustomDatePicker {
                 }
             }
 //            selectedCalender.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour.get(0)));
+//            hour_pv.setSelected(0);
             hour_pv.setData(hour);
             if (hour.size() < 24 && Integer.valueOf(currentHour) > hour.size()) {
                 hour_pv.setSelected(hour.size() - 1);
-                currentHour = formatTimeUnit(hour.size());
                 selectedCalender.set(Calendar.HOUR_OF_DAY, hour.size());
+                currentHour = formatTimeUnit(hour.size());
             } else {
                 hour_pv.setSelected(currentHour);
                 selectedCalender.set(Calendar.HOUR_OF_DAY, Integer.valueOf(currentHour));
             }
-//            hour_pv.setSelected(0);
             executeAnimator(hour_pv);
         }
 
@@ -478,13 +478,14 @@ public class CustomDatePicker {
                     minute.add(formatTimeUnit(i));
                 }
             }
-//            selectedCalender.set(Calendar.MINUTE, Integer.parseInt(minute.get(0)));
             minute_pv.setData(minute);
+//            selectedCalender.set(Calendar.MINUTE, Integer.parseInt(minute.get(0)));
 //            minute_pv.setSelected(0);
             if (minute.size() < 60 && minute.size() < Integer.valueOf(currentMin)) {
                 minute_pv.setSelected(minute.size() - 1);
-                currentMin = formatTimeUnit(minute.size());
                 selectedCalender.set(Calendar.MINUTE, minute.size());
+                //改变当前选择的分钟
+                currentMin = formatTimeUnit(minute.size());
             } else {
                 minute_pv.setSelected(currentMin);
                 selectedCalender.set(Calendar.MINUTE, Integer.parseInt(currentMin));
@@ -629,7 +630,7 @@ public class CustomDatePicker {
             }
             month_pv.setData(month);
             month_pv.setSelected(dateStr[1]);
-            currentMon = dateStr[1];
+            currentMon = dateStr[1]; //保存选择的月份
             selectedCalender.set(Calendar.MONTH, Integer.parseInt(dateStr[1]) - 1);
             executeAnimator(month_pv);
 
@@ -651,7 +652,7 @@ public class CustomDatePicker {
             lastMonthDays = day.size();
             day_pv.setData(day);
             day_pv.setSelected(dateStr[2]);
-            currentDay = dateStr[2];
+            currentDay = dateStr[2]; //保存选择的日
             selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dateStr[2]));
             executeAnimator(day_pv);
 
@@ -676,7 +677,7 @@ public class CustomDatePicker {
                     }
                     hour_pv.setData(hour);
                     hour_pv.setSelected(timeStr[0]);
-                    currentHour = timeStr[0];
+                    currentHour = timeStr[0]; //保存选择的小时
                     selectedCalender.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeStr[0]));
                     executeAnimator(hour_pv);
                 }
@@ -700,7 +701,7 @@ public class CustomDatePicker {
                     }
                     minute_pv.setData(minute);
                     minute_pv.setSelected(timeStr[1]);
-                    currentMin = timeStr[1];
+                    currentMin = timeStr[1]; //保存选择的分钟
                     selectedCalender.set(Calendar.MINUTE, Integer.parseInt(timeStr[1]));
                     executeAnimator(minute_pv);
                 }
@@ -726,6 +727,4 @@ public class CustomDatePicker {
         }
         return convertSuccess;
     }
-
-
 }

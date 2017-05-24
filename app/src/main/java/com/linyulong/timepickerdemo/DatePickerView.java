@@ -1,4 +1,4 @@
-package com.linyulong.timepickerdemo.widget;
+package com.linyulong.timepickerdemo;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,9 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
-
-import com.linyulong.timepickerdemo.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -171,12 +168,14 @@ public class DatePickerView extends View {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Style.FILL);
         mPaint.setTextAlign(Align.CENTER);
+        //被选中的数字颜色
         mPaint.setColor(ContextCompat.getColor(context, R.color.color_gold));
         //第二个paint
         nPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         nPaint.setStyle(Style.FILL);
         nPaint.setTextAlign(Align.CENTER);
-        nPaint.setColor(ContextCompat.getColor(context, R.color.color3));
+        //未选中的数字颜色
+        nPaint.setColor(ContextCompat.getColor(context, R.color.color_text_unselected));
     }
 
     @Override
